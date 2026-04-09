@@ -17,36 +17,57 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install dependencies
+    - name: Install Python dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev liblzma-dev cmake libffi-dev libssl-dev
         pip3 install --user buildozer cython virtualenv
 
-    - name: Setup Android SDK
+    - name: Pre-setup Android SDK/NDK/Ant
       run: |
-        export ANDROID_HOME=$HOME/android-sdk
-        mkdir -p $ANDROID_HOME/cmdline-tools
-        wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdline-tools.zip
-        unzip -q /tmp/cmdline-tools.zip -d $ANDROID_HOME/cmdline-tools/
-        mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
-        export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+        set -e
+        mkdir -p ~/.buildozer/android/platform
+
+        # 1. Android SDK (Buildozer 1.5.0 硬编码了旧版 commandlinetools，我们提前下载并放好在它期望的路径)
+        SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
+        if [ ! -f "$SDK_DIR/tools/bin/sdkmanager" ]; then
+          echo "Downloading Android SDK command line tools..."
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-6514223_latest.zip -O /tmp/cmdline-tools.zip
+          mkdir -p "$SDK_DIR"
+          unzip -q /tmp/cmdline-tools.zip -d "$SDK_DIR"
+        fi
+        export PATH="$SDK_DIR/tools/bin:$PATH"
+
+        # 2. 接受所有 license（关键！）
+        echo "Accepting Android SDK licenses..."
+        mkdir -p "$SDK_DIR/licenses"
         yes | sdkmanager --licenses >/dev/null 2>&1 || true
-        sdkmanager "platform-tools" "build-tools;33.0.2" "platforms;android-33" "ndk;25.2.9519653"
-        echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
-        echo "ANDROIDSDK=$ANDROID_HOME" >> $GITHUB_ENV
-        echo "ANDROIDNDK=$ANDROID_HOME/ndk/25.2.9519653" >> $GITHUB_ENV
-        echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
-        echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
+
+        # 3. 预装 Buildozer 需要的包，避免它再调用 sdkmanager 时被 license 卡住
+        echo "Installing SDK packages..."
+        sdkmanager "platform-tools" "build-tools;33.0.2" "platforms;android-33"
+
+        # 4. Android NDK (Buildozer 推荐 25b)
+        NDK_DIR="$HOME/.buildozer/android/platform/android-ndk-r25b"
+        if [ ! -d "$NDK_DIR" ]; then
+          echo "Downloading Android NDK..."
+          wget -q https://dl.google.com/android/repository/android-ndk-r25b-linux.zip -O /tmp/ndk.zip
+          unzip -q /tmp/ndk.zip -d ~/.buildozer/android/platform/
+        fi
+
+        # 5. Apache Ant (Buildozer 也需要它)
+        ANT_DIR="$HOME/.buildozer/android/platform/apache-ant-1.9.4"
+        if [ ! -d "$ANT_DIR/bin" ]; then
+          echo "Downloading Apache Ant..."
+          mkdir -p "$ANT_DIR"
+          wget -q https://archive.apache.org/dist/ant/binaries/apache-ant-1.9.4-bin.tar.gz -O /tmp/ant.tar.gz
+          tar -xzf /tmp/ant.tar.gz -C "$ANT_DIR" --strip-components=1
+        fi
 
     - name: Build APK
       run: |
         export PATH=$PATH:~/.local/bin
         buildozer android debug
-      env:
-        ANDROID_HOME: ${{ env.ANDROID_HOME }}
-        ANDROIDSDK: ${{ env.ANDROIDSDK }}
-        ANDROIDNDK: ${{ env.ANDROIDNDK }}
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
