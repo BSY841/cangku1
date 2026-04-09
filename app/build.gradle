@@ -30,4 +30,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    
+    // Flipper 实时调试工具（仅在 debug 生效）
+    debugImplementation 'com.facebook.flipper:flipper:0.201.0'
+    debugImplementation 'com.facebook.flipper:flipper-network-plugin:0.201.0'
+    debugImplementation 'com.facebook.soloader:soloader:0.10.5'
 }
