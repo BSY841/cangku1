@@ -3,23 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="?attr/colorSurface">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="?android:attr/colorBackground">
+        android:padding="16dp">
 
-        <!-- Input Card -->
+        <!-- 飞行信息卡片 -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
-            xmlns:app="http://schemas.android.com/apk/res-auto">
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -28,29 +30,20 @@
                 android:padding="16dp">
 
                 <!-- 机组配置 -->
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/crewInput"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:hint="机组配置"
                     android:layout_marginBottom="12dp">
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/crewDropdown"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="机组配置"
-                        android:textSize="14sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:fontFamily="@font/simhei" />
-
-                    <Spinner
-                        android:id="@+id/crewSpinner"
-                        android:layout_width="0dp"
-                        android:layout_height="46dp"
-                        android:layout_weight="1.5"
-                        android:background="@drawable/spinner_background" />
-                </LinearLayout>
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- 起飞时间 -->
                 <LinearLayout
@@ -60,43 +53,44 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="12dp">
 
-                    <TextView
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/hourInput"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="起飞时间"
-                        android:textSize="14sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:fontFamily="@font/simhei" />
+                        android:hint="小时">
 
-                    <LinearLayout
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/hourDropdown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="："
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:layout_marginHorizontal="8dp"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/minuteInput"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1.5"
-                        android:orientation="horizontal"
-                        android:gravity="center">
+                        android:layout_weight="1"
+                        android:hint="分钟">
 
-                        <NumberPicker
-                            android:id="@+id/hourPicker"
-                            android:layout_width="0dp"
-                            android:layout_height="120dp"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/minuteDropdown"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="："
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            android:layout_marginHorizontal="4dp"
-                            android:fontFamily="@font/simhei" />
-
-                        <NumberPicker
-                            android:id="@+id/minutePicker"
-                            android:layout_width="0dp"
-                            android:layout_height="120dp"
-                            android:layout_weight="1" />
-                    </LinearLayout>
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <!-- 航段数 -->
@@ -104,25 +98,21 @@
                     android:id="@+id/legLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
                     android:layout_marginBottom="12dp">
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/legInput"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="航段数"
-                        android:textSize="14sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:fontFamily="@font/simhei" />
+                        android:hint="航段数">
 
-                    <Spinner
-                        android:id="@+id/legSpinner"
-                        android:layout_width="0dp"
-                        android:layout_height="46dp"
-                        android:layout_weight="1.5"
-                        android:background="@drawable/spinner_background" />
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/legDropdown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <!-- 休息设施 -->
@@ -130,26 +120,22 @@
                     android:id="@+id/restLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
                     android:layout_marginBottom="12dp"
                     android:visibility="gone">
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/restInput"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="休息设施"
-                        android:textSize="14sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:fontFamily="@font/simhei" />
+                        android:hint="休息设施">
 
-                    <Spinner
-                        android:id="@+id/restSpinner"
-                        android:layout_width="0dp"
-                        android:layout_height="46dp"
-                        android:layout_weight="1.5"
-                        android:background="@drawable/spinner_background" />
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/restDropdown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <!-- 休息间隔 -->
@@ -159,65 +145,69 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <TextView
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/restHourInput"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="休息间隔"
-                        android:textSize="14sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:fontFamily="@font/simhei" />
+                        android:hint="小时">
 
-                    <LinearLayout
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/restHourDropdown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="："
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:layout_marginHorizontal="8dp"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/restMinuteInput"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1.5"
-                        android:orientation="horizontal"
-                        android:gravity="center">
+                        android:layout_weight="1"
+                        android:hint="分钟">
 
-                        <NumberPicker
-                            android:id="@+id/restHourPicker"
-                            android:layout_width="0dp"
-                            android:layout_height="120dp"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/restMinuteDropdown"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="："
-                            android:textSize="22sp"
-                            android:textStyle="bold"
-                            android:layout_marginHorizontal="4dp"
-                            android:fontFamily="@font/simhei" />
-
-                        <NumberPicker
-                            android:id="@+id/restMinutePicker"
-                            android:layout_width="0dp"
-                            android:layout_height="120dp"
-                            android:layout_weight="1" />
-                    </LinearLayout>
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Calculate Button -->
-        <Button
+        <!-- 计算按钮：MaterialButton 圆角 -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/calcButton"
             android:layout_width="200dp"
-            android:layout_height="46dp"
+            android:layout_height="56dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
             android:text="开始计算"
             android:textSize="16sp"
-            android:fontFamily="@font/simhei" />
+            app:cornerRadius="28dp" />
 
-        <!-- Result Card -->
+        <!-- 计算结果卡片 -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
+            app:cardElevation="4dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -225,15 +215,14 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/resultText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="请输入信息后点击「开始计算」"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:lineSpacingMultiplier="1.4"
-                    android:fontFamily="@font/simhei"
-                    android:textColor="?android:attr/textColorPrimary" />
+                    android:textColor="?attr/colorOnSurface" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

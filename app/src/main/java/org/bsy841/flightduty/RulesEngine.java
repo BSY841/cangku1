@@ -6,8 +6,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * 规则引擎：封装了飞行机组执勤时间的查表逻辑与公共工具方法。
+ * 所有规则均来源于原始 time.xlsx 中的最大飞行时间与最大执勤时间表格。
+ */
 public class RulesEngine {
 
+    /** 单条规则的数据结构 */
     public static class Rule {
         public final String cat;
         public final String people;
@@ -72,6 +77,7 @@ public class RulesEngine {
         RULES.add(new Rule("duty", "加二人", null, "3级休息设施", "0000", "2359", 18));
     }
 
+    /** 判断 HHMM 字符串是否落在 [start, end] 闭区间内 */
     public static boolean timeInWindow(String hhmmStr, String startStr, String endStr) {
         int val = Integer.parseInt(hhmmStr);
         int start = Integer.parseInt(startStr);
@@ -79,6 +85,16 @@ public class RulesEngine {
         return start <= val && val <= end;
     }
 
+    /**
+     * 从左往右竖着查表，返回对应的小时数 tm。
+     *
+     * @param cat        类别："flt" 或 "duty"
+     * @param peopleKey  机组类型："非扩编"/"加一人"/"加二人"
+     * @param takeoffHhmm 起飞时间（如 "0900"）
+     * @param leg        航段数（仅非扩编组使用）
+     * @param rest       休息设施（仅扩编组使用）
+     * @return 查到的最大小时数，未找到返回 null
+     */
     public static Integer lookupValue(String cat, String peopleKey, String takeoffHhmm, String leg, String rest) {
         for (Rule rule : RULES) {
             if (!rule.cat.equals(cat)) continue;
@@ -92,9 +108,28 @@ public class RulesEngine {
         return null;
     }
 
+    /** 将分钟数转为 HH:MM 格式 */
     public static String minutesToHHmm(int totalMinutes) {
         int h = totalMinutes / 60;
         int m = totalMinutes % 60;
         return String.format(Locale.getDefault(), "%02d:%02d", h, m);
+    }
+
+    /**
+     * 将分钟数转为 HH:MM 格式；若跨天（超过24小时），显示为 HH:MM (+N)。
+     *
+     * @param totalMinutes 总分钟数
+     * @return 格式化后的时间字符串，如 "05:00 (+1)"
+     */
+    public static String minutesToHHmmWithDay(int totalMinutes) {
+        int days = totalMinutes / 1440; // 1440 = 24*60
+        int remainder = totalMinutes % 1440;
+        int h = remainder / 60;
+        int m = remainder % 60;
+        String time = String.format(Locale.getDefault(), "%02d:%02d", h, m);
+        if (days > 0) {
+            return time + " (+" + days + ")";
+        }
+        return time;
     }
 }

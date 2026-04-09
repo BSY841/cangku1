@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 夜间主题：Material 3 Dark -->
     <style name="Theme.FlightDuty" parent="Theme.Material3.Dark">
         <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorOnPrimary">@color/onPrimaryColor</item>
+        <item name="colorPrimaryContainer">@color/primaryContainerColor</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainerColor</item>
+
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorOnSecondary">@color/onSecondaryColor</item>
+
+        <!-- Dark 主题下 Surface 自动变暗，OnSurface 自动变亮（白色/近白色） -->
+        <item name="colorSurface">@color/onSurfaceColor</item>
+        <item name="colorOnSurface">@color/surfaceColor</item>
+        <item name="colorSurfaceVariant">@color/onSurfaceVariantColor</item>
+        <item name="colorOnSurfaceVariant">@color/surfaceVariantColor</item>
+
+        <item name="colorError">@color/errorColor</item>
+        <item name="colorOnError">@color/onErrorColor</item>
+
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/accentColor</item>
         <item name="android:statusBarColor">@color/primaryDarkColor</item>

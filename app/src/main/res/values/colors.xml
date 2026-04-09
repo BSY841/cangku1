@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">#FF0D47A1</color>
+    <!-- Material 3 深蓝色主色调 -->
+    <color name="primaryColor">#FF1B4D99</color>
+    <color name="onPrimaryColor">#FFFFFFFF</color>
+    <color name="primaryContainerColor">#FFD6E3FF</color>
+    <color name="onPrimaryContainerColor">#FF001B3D</color>
+
+    <color name="secondaryColor">#FF445E91</color>
+    <color name="onSecondaryColor">#FFFFFFFF</color>
+
+    <color name="surfaceColor">#FFF9F9FF</color>
+    <color name="onSurfaceColor">#FF1A1B21</color>
+    <color name="surfaceVariantColor">#FFE0E2EC</color>
+    <color name="onSurfaceVariantColor">#FF44474E</color>
+
+    <color name="errorColor">#FFBA1A1A</color>
+    <color name="onErrorColor">#FFFFFFFF</color>
+
+    <!-- 兼容旧属性 -->
     <color name="primaryDarkColor">#FF002171</color>
-    <color name="accentColor">#FF0D47A1</color>
+    <color name="accentColor">#FF1B4D99</color>
 </resources>
