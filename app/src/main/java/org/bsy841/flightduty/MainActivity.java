@@ -1,5 +1,6 @@
 package org.bsy841.flightduty;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout restLayout;
     private Button calcButton;
 
-    private boolean isDarkTheme = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +193,8 @@ public class MainActivity extends AppCompatActivity {
         sb.append("\n");
         sb.append("说明：临界时间 = 起飞时间 + 对应时限；若填写了休息间隔，则额外累加至执勤临界时间中。");
 
-        resultText.setTextColor(getColor(isDarkTheme ? android.R.color.white : android.R.color.black));
+        boolean dark = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        resultText.setTextColor(getColor(dark ? android.R.color.white : android.R.color.black));
         resultText.setText(sb.toString());
     }
 
@@ -213,11 +214,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void toggleTheme() {
-        isDarkTheme = !isDarkTheme;
-        if (isDarkTheme) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
+        int currentMode = AppCompatDelegate.getDefaultNightMode();
+        if (currentMode == AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
         recreate();
     }
