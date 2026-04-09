@@ -28,13 +28,15 @@ jobs:
       run: |
         sdkmanager "platform-tools" "build-tools;33.0.2" "platforms;android-33"
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-      with:
-        gradle-version: "8.0"
+    - name: Download and install Gradle
+      run: |
+        wget -q https://services.gradle.org/distributions/gradle-8.0-bin.zip -O /tmp/gradle.zip
+        unzip -q /tmp/gradle.zip -d /tmp/
+        echo "/tmp/gradle-8.0/bin" >> $GITHUB_PATH
 
     - name: Build APK
-      run: gradle assembleDebug
+      run: |
+        gradle assembleDebug --stacktrace
       env:
         ANDROID_HOME: ${{ env.ANDROID_HOME }}
 
