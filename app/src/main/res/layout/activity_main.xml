@@ -18,10 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,28 +42,19 @@
                         android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- 起飞时间 -->
+                <!-- 起飞时间：NumberPicker -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:layout_marginBottom="12dp">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/hourInput"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    <NumberPicker
+                        android:id="@+id/hourPicker"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="小时">
-
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/hourDropdown"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_height="120dp"
+                        android:layout_weight="1" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
@@ -77,20 +65,11 @@
                         android:layout_marginHorizontal="8dp"
                         android:textColor="?attr/colorOnSurface" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/minuteInput"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    <NumberPicker
+                        android:id="@+id/minutePicker"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="分钟">
-
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/minuteDropdown"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_height="120dp"
+                        android:layout_weight="1" />
                 </LinearLayout>
 
                 <!-- 航段数 -->
@@ -138,27 +117,18 @@
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
-                <!-- 休息间隔 -->
+                <!-- 休息间隔：NumberPicker -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/restHourInput"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    <NumberPicker
+                        android:id="@+id/restHourPicker"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="小时">
-
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/restHourDropdown"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_height="120dp"
+                        android:layout_weight="1" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
@@ -169,26 +139,17 @@
                         android:layout_marginHorizontal="8dp"
                         android:textColor="?attr/colorOnSurface" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/restMinuteInput"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    <NumberPicker
+                        android:id="@+id/restMinutePicker"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="分钟">
-
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/restMinuteDropdown"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_height="120dp"
+                        android:layout_weight="1" />
                 </LinearLayout>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 计算按钮：MaterialButton 圆角 -->
+        <!-- 计算按钮 -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/calcButton"
             android:layout_width="200dp"
@@ -204,10 +165,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"

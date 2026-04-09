@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,23 +26,16 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
-    // 输入控件：TextInputLayout + MaterialAutoCompleteTextView 实现下拉选择
-    private TextInputLayout crewInput;
+    // 下拉选择控件（MaterialAutoCompleteTextView）
     private AutoCompleteTextView crewDropdown;
-    private TextInputLayout legInput;
     private AutoCompleteTextView legDropdown;
-    private TextInputLayout restInput;
     private AutoCompleteTextView restDropdown;
 
-    private TextInputLayout hourInput;
-    private AutoCompleteTextView hourDropdown;
-    private TextInputLayout minuteInput;
-    private AutoCompleteTextView minuteDropdown;
-
-    private TextInputLayout restHourInput;
-    private AutoCompleteTextView restHourDropdown;
-    private TextInputLayout restMinuteInput;
-    private AutoCompleteTextView restMinuteDropdown;
+    // 时间滚轮选择器（NumberPicker）
+    private NumberPicker hourPicker;
+    private NumberPicker minutePicker;
+    private NumberPicker restHourPicker;
+    private NumberPicker restMinutePicker;
 
     // 结果与按钮
     private MaterialTextView resultText;
@@ -60,28 +54,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         bindViews();
+        initPickers();
         initDropdowns();
         initListeners();
     }
 
     /** 绑定所有视图控件 */
     private void bindViews() {
-        crewInput = findViewById(R.id.crewInput);
         crewDropdown = findViewById(R.id.crewDropdown);
-        legInput = findViewById(R.id.legInput);
         legDropdown = findViewById(R.id.legDropdown);
-        restInput = findViewById(R.id.restInput);
         restDropdown = findViewById(R.id.restDropdown);
 
-        hourInput = findViewById(R.id.hourInput);
-        hourDropdown = findViewById(R.id.hourDropdown);
-        minuteInput = findViewById(R.id.minuteInput);
-        minuteDropdown = findViewById(R.id.minuteDropdown);
-
-        restHourInput = findViewById(R.id.restHourInput);
-        restHourDropdown = findViewById(R.id.restHourDropdown);
-        restMinuteInput = findViewById(R.id.restMinuteInput);
-        restMinuteDropdown = findViewById(R.id.restMinuteDropdown);
+        hourPicker = findViewById(R.id.hourPicker);
+        minutePicker = findViewById(R.id.minutePicker);
+        restHourPicker = findViewById(R.id.restHourPicker);
+        restMinutePicker = findViewById(R.id.restMinutePicker);
 
         resultText = findViewById(R.id.resultText);
         legLayout = findViewById(R.id.legLayout);
@@ -89,7 +76,30 @@ public class MainActivity extends AppCompatActivity {
         calcButton = findViewById(R.id.calcButton);
     }
 
-    /** 初始化所有下拉菜单的数据与默认选中项 */
+    /** 初始化 NumberPicker（小时/分钟滚轮） */
+    private void initPickers() {
+        hourPicker.setMinValue(0);
+        hourPicker.setMaxValue(23);
+        hourPicker.setValue(9);
+        hourPicker.setFormatter(value -> String.format("%02d", value));
+
+        minutePicker.setMinValue(0);
+        minutePicker.setMaxValue(59);
+        minutePicker.setValue(0);
+        minutePicker.setFormatter(value -> String.format("%02d", value));
+
+        restHourPicker.setMinValue(0);
+        restHourPicker.setMaxValue(23);
+        restHourPicker.setValue(0);
+        restHourPicker.setFormatter(value -> String.format("%02d", value));
+
+        restMinutePicker.setMinValue(0);
+        restMinutePicker.setMaxValue(59);
+        restMinutePicker.setValue(0);
+        restMinutePicker.setFormatter(value -> String.format("%02d", value));
+    }
+
+    /** 初始化下拉菜单数据与默认选中项 */
     private void initDropdowns() {
         // 机组配置
         setDropdown(crewDropdown, listOf("非扩编组", "扩编组（3人）", "扩编组（4人）"), "非扩编组");
@@ -101,14 +111,6 @@ public class MainActivity extends AppCompatActivity {
         // 休息设施
         setDropdown(restDropdown, listOf("1级休息设施", "2级休息设施", "3级休息设施"), "1级休息设施");
 
-        // 起飞时间
-        setDropdown(hourDropdown, generateNumbers(0, 23), "09");
-        setDropdown(minuteDropdown, generateNumbers(0, 59), "00");
-
-        // 休息间隔
-        setDropdown(restHourDropdown, generateNumbers(0, 23), "00");
-        setDropdown(restMinuteDropdown, generateNumbers(0, 59), "00");
-
         onCrewChange(0);
     }
 
@@ -117,15 +119,6 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, items);
         view.setAdapter(adapter);
         view.setText(defaultValue, false); // false = 不触发过滤动画
-    }
-
-    /** 生成带前导零的数字字符串列表（如 00, 01, ... 59） */
-    private List<String> generateNumbers(int start, int end) {
-        List<String> list = new ArrayList<>();
-        for (int i = start; i <= end; i++) {
-            list.add(String.format("%02d", i));
-        }
-        return list;
     }
 
     private List<String> listOf(String... items) {
@@ -163,15 +156,11 @@ public class MainActivity extends AppCompatActivity {
      */
     private void calculate() {
         // 1. 解析输入
-        int takeoffHour = Integer.parseInt(hourDropdown.getText().toString());
-        int takeoffMinute = Integer.parseInt(minuteDropdown.getText().toString());
-        int takeoffMin = takeoffHour * 60 + takeoffMinute;
-        String takeoffStr = String.format("%02d:%02d", takeoffHour, takeoffMinute);
-        String takeoffHhmm = String.format("%02d%02d", takeoffHour, takeoffMinute);
+        int takeoffMin = hourPicker.getValue() * 60 + minutePicker.getValue();
+        String takeoffStr = String.format("%02d:%02d", hourPicker.getValue(), minutePicker.getValue());
+        String takeoffHhmm = String.format("%02d%02d", hourPicker.getValue(), minutePicker.getValue());
 
-        int restHour = Integer.parseInt(restHourDropdown.getText().toString());
-        int restMinute = Integer.parseInt(restMinuteDropdown.getText().toString());
-        int restIntervalMin = restHour * 60 + restMinute;
+        int restIntervalMin = restHourPicker.getValue() * 60 + restMinutePicker.getValue();
 
         String crewText = crewDropdown.getText().toString();
         String peopleKey = RulesEngine.PEOPLE_MAP.get(crewText);
@@ -215,7 +204,9 @@ public class MainActivity extends AppCompatActivity {
             sb.append("休息设施：").append(restDropdown.getText().toString()).append("\n");
         }
         if (restIntervalMin > 0) {
-            sb.append("休息间隔：").append(String.format("%02d:%02d", restHour, restMinute)).append("\n");
+            sb.append("休息间隔：")
+              .append(String.format("%02d:%02d", restHourPicker.getValue(), restMinutePicker.getValue()))
+              .append("\n");
         }
         sb.append("\n");
         sb.append("最大飞行时间：").append(maxFlt).append(" 小时\n");
@@ -223,7 +214,9 @@ public class MainActivity extends AppCompatActivity {
         sb.append("\n");
         sb.append("执勤超时临界时间：").append(RulesEngine.minutesToHHmmWithDay(dutyCritical)).append("\n");
         if (restIntervalMin > 0) {
-            sb.append("含休息间隔的执勤临界时间：").append(RulesEngine.minutesToHHmmWithDay(dutyCriticalWithRest)).append("\n");
+            sb.append("含休息间隔的执勤临界时间：")
+              .append(RulesEngine.minutesToHHmmWithDay(dutyCriticalWithRest))
+              .append("\n");
         }
         sb.append("\n");
         sb.append("说明：临界时间 = 起飞时间 + 对应时限；若填写了休息间隔，则额外累加至执勤临界时间中。");
