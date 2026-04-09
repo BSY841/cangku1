@@ -17,7 +17,7 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install Python dependencies
+    - name: Install system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev liblzma-dev cmake libffi-dev libssl-dev
@@ -26,28 +26,26 @@ jobs:
     - name: Pre-setup Android SDK/NDK/Ant
       run: |
         set -e
-        mkdir -p ~/.buildozer/android/platform
-
-        # 1. Android SDK (Buildozer 1.5.0 硬编码了旧版 commandlinetools，我们提前下载并放好在它期望的路径)
         SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
+        mkdir -p "$SDK_DIR/licenses"
+
+        # 1. 下载 Buildozer 1.5.0 硬编码的旧版 command line tools
         if [ ! -f "$SDK_DIR/tools/bin/sdkmanager" ]; then
           echo "Downloading Android SDK command line tools..."
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-6514223_latest.zip -O /tmp/cmdline-tools.zip
-          mkdir -p "$SDK_DIR"
           unzip -q /tmp/cmdline-tools.zip -d "$SDK_DIR"
         fi
-        export PATH="$SDK_DIR/tools/bin:$PATH"
 
-        # 2. 接受所有 license（关键！）
-        echo "Accepting Android SDK licenses..."
-        mkdir -p "$SDK_DIR/licenses"
-        yes | sdkmanager --licenses >/dev/null 2>&1 || true
+        # 2. 手动写入 license 文件，彻底跳过 Accept 弹窗
+        echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$SDK_DIR/licenses/android-sdk-license"
+        echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> "$SDK_DIR/licenses/android-sdk-license"
+        echo "84831b9409646a918e30573bab4c9c91346d8abd" >> "$SDK_DIR/licenses/android-sdk-license"
 
-        # 3. 预装 Buildozer 需要的包，避免它再调用 sdkmanager 时被 license 卡住
+        # 3. 预装 platform-tools 和 build-tools（必须加 --sdk_root）
         echo "Installing SDK packages..."
-        sdkmanager "platform-tools" "build-tools;33.0.2" "platforms;android-33"
+        yes | "$SDK_DIR/tools/bin/sdkmanager" --sdk_root="$SDK_DIR" "platform-tools" "build-tools;33.0.2" "platforms;android-33" || true
 
-        # 4. Android NDK (Buildozer 推荐 25b)
+        # 4. 下载 NDK 25b
         NDK_DIR="$HOME/.buildozer/android/platform/android-ndk-r25b"
         if [ ! -d "$NDK_DIR" ]; then
           echo "Downloading Android NDK..."
@@ -55,7 +53,7 @@ jobs:
           unzip -q /tmp/ndk.zip -d ~/.buildozer/android/platform/
         fi
 
-        # 5. Apache Ant (Buildozer 也需要它)
+        # 5. 下载 Apache Ant
         ANT_DIR="$HOME/.buildozer/android/platform/apache-ant-1.9.4"
         if [ ! -d "$ANT_DIR/bin" ]; then
           echo "Downloading Apache Ant..."
