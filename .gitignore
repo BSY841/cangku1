@@ -8,11 +8,23 @@ env/
 venv/
 .venv/
 
-# Buildozer / Android
+# Buildozer / Android (Python)
 .buildozer/
-bin/
+python/bin/
 *.apk
 *.aab
+
+# Android (Gradle)
+*.iml
+.gradle/
+local.properties
+/build
+/app/build
+/app/release
+/app/debug
+/captures
+.externalNativeBuild
+.cxx
 
 # IDE
 .vscode/
