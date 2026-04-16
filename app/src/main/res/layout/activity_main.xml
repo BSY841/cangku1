@@ -41,10 +41,7 @@
                         android:id="@+id/crewDropdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:clickable="true" />
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- 起飞时间：NumberPicker -->
@@ -95,10 +92,7 @@
                             android:id="@+id/legDropdown"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:clickable="true" />
+                            android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
@@ -121,10 +115,7 @@
                             android:id="@+id/restDropdown"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-                            android:clickable="true" />
+                            android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 

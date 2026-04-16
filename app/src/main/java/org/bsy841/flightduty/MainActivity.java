@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         bindViews();
         initPickers();
-        initDropdowns();
+        initDropdowns(savedInstanceState);
         initListeners();
     }
 
@@ -99,26 +99,46 @@ public class MainActivity extends AppCompatActivity {
         restMinutePicker.setFormatter(value -> String.format("%02d", value));
     }
 
-    /** 初始化下拉菜单数据与默认选中项 */
-    private void initDropdowns() {
-        // 机组配置
-        setDropdown(crewDropdown, listOf("非扩编组", "扩编组（3人）", "扩编组（4人）"), "非扩编组");
+    /**
+     * 初始化下拉菜单数据与默认选中项。
+     * 如果是 Activity 重建（如主题切换），使用 savedInstanceState 恢复状态，避免重置选项。
+     */
+    private void initDropdowns(Bundle savedInstanceState) {
+        // 机组配置：先设置数据，再设置监听器，防止重建时误触发
+        setDropdown(crewDropdown, listOf("非扩编组", "扩编组（3人）", "扩编组（4人）"), 
+                savedInstanceState == null ? "非扩编组" : crewDropdown.getText().toString());
         crewDropdown.setOnItemClickListener((parent, view, position, id) -> onCrewChange(position));
 
         // 航段数
-        setDropdown(legDropdown, listOf("1-4段", "5段", "6段", "7段"), "1-4段");
+        setDropdown(legDropdown, listOf("1-4段", "5段", "6段", "7段"), 
+                savedInstanceState == null ? "1-4段" : legDropdown.getText().toString());
 
         // 休息设施
-        setDropdown(restDropdown, listOf("1级休息设施", "2级休息设施", "3级休息设施"), "1级休息设施");
+        setDropdown(restDropdown, listOf("1级休息设施", "2级休息设施", "3级休息设施"), 
+                savedInstanceState == null ? "1级休息设施" : restDropdown.getText().toString());
 
-        onCrewChange(0);
+        // 根据当前选中的机组配置，恢复界面状态
+        int position = crewDropdown.getText().toString().equals("非扩编组") ? 0 
+                : crewDropdown.getText().toString().equals("扩编组（3人）") ? 1 : 2;
+        onCrewChange(position);
     }
 
-    /** 为 MaterialAutoCompleteTextView 设置数据并指定默认值 */
+    /** 
+     * 为 MaterialAutoCompleteTextView 设置数据并指定默认值。
+     * 先清除监听器再设置文本，避免在 Activity 重建时误触发回调。
+     */
     private void setDropdown(MaterialAutoCompleteTextView view, List<String> items, String defaultValue) {
+        // 先设置数据适配器
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, items);
         view.setAdapter(adapter);
-        view.setText(defaultValue, false); // false = 不触发过滤动画
+        
+        // 暂时清除焦点，防止下拉框自动弹出
+        view.clearFocus();
+        
+        // 设置默认值（false = 不触发过滤动画，不触发监听器）
+        if (defaultValue != null && !defaultValue.isEmpty()) {
+            view.setText(defaultValue, false);
+        }
     }
 
     private List<String> listOf(String... items) {
