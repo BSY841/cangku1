@@ -2,7 +2,6 @@ package org.bsy841.flightduty;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -14,13 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.facebook.flipper.android.AndroidFlipperClient;
-import com.facebook.flipper.android.utils.FlipperUtils;
-import com.facebook.flipper.core.FlipperClient;
-import com.facebook.flipper.plugins.inspector.DescriptorMapping;
-import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin;
-import com.facebook.flipper.plugins.network.NetworkFlipperPlugin;
-import com.facebook.soloader.SoLoader;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
@@ -61,24 +53,10 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("飞行机组执勤时间计算器");
         }
 
-        // 初始化 Flipper 实时调试工具（仅 debug 模式有效）
-        initFlipper();
-
         bindViews();
         initPickers();
         initDropdowns();
         initListeners();
-    }
-
-    /** 初始化 Facebook Flipper 调试工具，用于电脑端实时查看布局、网络、日志 */
-    private void initFlipper() {
-        SoLoader.init(this, false);
-        if (BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(this)) {
-            FlipperClient client = AndroidFlipperClient.getInstance(this);
-            client.addPlugin(new InspectorFlipperPlugin(this, DescriptorMapping.withDefaults()));
-            client.addPlugin(new NetworkFlipperPlugin());
-            client.start();
-        }
     }
 
     /** 绑定所有视图控件 */
