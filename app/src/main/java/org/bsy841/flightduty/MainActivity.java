@@ -26,6 +26,11 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
+    // 用于在 recreate() 时保存状态（静态变量在 Activity 重建后仍然保留）
+    private static String savedCrewSelection = null;
+    private static String savedLegSelection = null;
+    private static String savedRestSelection = null;
+
     // 下拉选择控件（MaterialAutoCompleteTextView）
     private MaterialAutoCompleteTextView crewDropdown;
     private MaterialAutoCompleteTextView legDropdown;
@@ -101,26 +106,46 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 初始化下拉菜单数据与默认选中项。
-     * 如果是 Activity 重建（如主题切换），使用 savedInstanceState 恢复状态，避免重置选项。
+     * 如果是 Activity 重建（如主题切换），使用静态变量恢复之前的选择。
      */
     private void initDropdowns(Bundle savedInstanceState) {
-        // 机组配置：先设置数据，再设置监听器，防止重建时误触发
-        setDropdown(crewDropdown, listOf("非扩编组", "扩编组（3人）", "扩编组（4人）"), 
-                savedInstanceState == null ? "非扩编组" : crewDropdown.getText().toString());
-        crewDropdown.setOnItemClickListener((parent, view, position, id) -> onCrewChange(position));
+        // 判断是否有保存的状态（主题切换时）
+        boolean hasSavedState = savedCrewSelection != null;
+        
+        // 机组配置
+        String crewDefault = hasSavedState ? savedCrewSelection : "非扩编组";
+        setDropdown(crewDropdown, listOf("非扩编组", "扩编组（3人）", "扩编组（4人）"), crewDefault);
+        crewDropdown.setOnItemClickListener((parent, view, position, id) -> {
+            onCrewChange(position);
+            // 更新保存的状态
+            savedCrewSelection = crewDropdown.getText().toString();
+        });
 
         // 航段数
-        setDropdown(legDropdown, listOf("1-4段", "5段", "6段", "7段"), 
-                savedInstanceState == null ? "1-4段" : legDropdown.getText().toString());
+        String legDefault = hasSavedState ? savedLegSelection : "1-4段";
+        setDropdown(legDropdown, listOf("1-4段", "5段", "6段", "7段"), legDefault);
+        legDropdown.setOnItemClickListener((parent, view, position, id) -> {
+            savedLegSelection = legDropdown.getText().toString();
+        });
 
         // 休息设施
-        setDropdown(restDropdown, listOf("1级休息设施", "2级休息设施", "3级休息设施"), 
-                savedInstanceState == null ? "1级休息设施" : restDropdown.getText().toString());
+        String restDefault = hasSavedState ? savedRestSelection : "1级休息设施";
+        setDropdown(restDropdown, listOf("1级休息设施", "2级休息设施", "3级休息设施"), restDefault);
+        restDropdown.setOnItemClickListener((parent, view, position, id) -> {
+            savedRestSelection = restDropdown.getText().toString();
+        });
 
         // 根据当前选中的机组配置，恢复界面状态
-        int position = crewDropdown.getText().toString().equals("非扩编组") ? 0 
-                : crewDropdown.getText().toString().equals("扩编组（3人）") ? 1 : 2;
+        int position = crewDefault.equals("非扩编组") ? 0 
+                : crewDefault.equals("扩编组（3人）") ? 1 : 2;
         onCrewChange(position);
+        
+        // 恢复后清除保存的状态（避免用户手动杀进程后重新打开还恢复旧状态）
+        if (hasSavedState) {
+            savedCrewSelection = null;
+            savedLegSelection = null;
+            savedRestSelection = null;
+        }
     }
 
     /** 
@@ -266,9 +291,16 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 切换日间/夜间主题。
      * 通过 AppCompatDelegate 设置全局 NightMode，然后调用 recreate() 重建 Activity。
-     * 注意：不能依赖 Activity 实例变量保存状态，因此直接从 AppCompatDelegate 读取当前模式。
+     * 重建前先保存当前选择，重建后在 initDropdowns() 中恢复。
      */
     private void toggleTheme() {
+        // 保存当前选择到静态变量
+        if (crewDropdown != null) {
+            savedCrewSelection = crewDropdown.getText().toString();
+            savedLegSelection = legDropdown.getText().toString();
+            savedRestSelection = restDropdown.getText().toString();
+        }
+        
         int currentMode = AppCompatDelegate.getDefaultNightMode();
         if (currentMode == AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
