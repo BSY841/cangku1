@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 
@@ -27,9 +27,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     // 下拉选择控件（MaterialAutoCompleteTextView）
-    private AutoCompleteTextView crewDropdown;
-    private AutoCompleteTextView legDropdown;
-    private AutoCompleteTextView restDropdown;
+    private MaterialAutoCompleteTextView crewDropdown;
+    private MaterialAutoCompleteTextView legDropdown;
+    private MaterialAutoCompleteTextView restDropdown;
 
     // 时间滚轮选择器（NumberPicker）
     private NumberPicker hourPicker;
@@ -114,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
         onCrewChange(0);
     }
 
-    /** 为 AutoCompleteTextView 设置数据并指定默认值 */
-    private void setDropdown(AutoCompleteTextView view, List<String> items, String defaultValue) {
+    /** 为 MaterialAutoCompleteTextView 设置数据并指定默认值 */
+    private void setDropdown(MaterialAutoCompleteTextView view, List<String> items, String defaultValue) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, items);
         view.setAdapter(adapter);
         view.setText(defaultValue, false); // false = 不触发过滤动画

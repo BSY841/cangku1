@@ -27,19 +27,24 @@
                 android:padding="16dp">
 
                 <!-- 机组配置 -->
+                <!-- 机组配置下拉框：Exposed Dropdown Menu 样式，点击展开所有选项 -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/crewInput"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="机组配置"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="12dp"
+                    app:endIconMode="dropdown_menu">
 
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/crewDropdown"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none" />
+                        android:inputType="none"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:clickable="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- 起飞时间：NumberPicker -->
@@ -90,7 +95,10 @@
                             android:id="@+id/legDropdown"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none" />
+                            android:inputType="none"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:clickable="true" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
@@ -113,7 +121,10 @@
                             android:id="@+id/restDropdown"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="none" />
+                            android:inputType="none"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:clickable="true" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
