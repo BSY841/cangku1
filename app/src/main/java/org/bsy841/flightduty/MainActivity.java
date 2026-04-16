@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         bindViews();
         initPickers();
-        initDropdowns(savedInstanceState);
+        initDropdowns();
         initListeners();
     }
 
@@ -106,9 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 初始化下拉菜单数据与默认选中项。
-     * 如果是 Activity 重建（如主题切换），使用静态变量恢复之前的选择。
+     * 使用静态变量恢复主题切换前的选择状态。
      */
-    private void initDropdowns(Bundle savedInstanceState) {
+    private void initDropdowns() {
         // 判断是否有保存的状态（主题切换时）
         boolean hasSavedState = savedCrewSelection != null;
         
@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
         setDropdown(crewDropdown, listOf("非扩编组", "扩编组（3人）", "扩编组（4人）"), crewDefault);
         crewDropdown.setOnItemClickListener((parent, view, position, id) -> {
             onCrewChange(position);
-            // 更新保存的状态
             savedCrewSelection = crewDropdown.getText().toString();
         });
 
@@ -139,9 +138,6 @@ public class MainActivity extends AppCompatActivity {
         int position = crewDefault.equals("非扩编组") ? 0 
                 : crewDefault.equals("扩编组（3人）") ? 1 : 2;
         onCrewChange(position);
-        
-        // 注意：不清除静态变量，确保连续切换主题时状态能持续保存
-        // 静态变量会在应用进程被杀死时自动清除
     }
 
     /** 
