@@ -140,27 +140,23 @@ public class MainActivity extends AppCompatActivity {
                 : crewDefault.equals("扩编组（3人）") ? 1 : 2;
         onCrewChange(position);
         
-        // 恢复后清除保存的状态（避免用户手动杀进程后重新打开还恢复旧状态）
-        if (hasSavedState) {
-            savedCrewSelection = null;
-            savedLegSelection = null;
-            savedRestSelection = null;
-        }
+        // 注意：不清除静态变量，确保连续切换主题时状态能持续保存
+        // 静态变量会在应用进程被杀死时自动清除
     }
 
     /** 
      * 为 MaterialAutoCompleteTextView 设置数据并指定默认值。
-     * 先清除监听器再设置文本，避免在 Activity 重建时误触发回调。
+     * Activity 重建时会自动恢复文本，需先清除再设置避免冲突。
      */
     private void setDropdown(MaterialAutoCompleteTextView view, List<String> items, String defaultValue) {
-        // 先设置数据适配器
+        // 先清除文本（防止 Android 自动恢复的旧文本干扰）
+        view.setText("", false);
+        
+        // 设置数据适配器
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, items);
         view.setAdapter(adapter);
         
-        // 暂时清除焦点，防止下拉框自动弹出
-        view.clearFocus();
-        
-        // 设置默认值（false = 不触发过滤动画，不触发监听器）
+        // 设置默认值（false = 不触发过滤）
         if (defaultValue != null && !defaultValue.isEmpty()) {
             view.setText(defaultValue, false);
         }
